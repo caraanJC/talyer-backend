@@ -3,6 +3,7 @@ import passport from 'passport';
 import bcrypt from 'bcrypt';
 import { AppDataSource } from '../config/AppDataSource';
 import { User } from '../entities/User';
+import { checkAuthentication, mustBeLoggedOut } from '../helpers/auth';
 
 const AuthRouter = Router();
 
@@ -12,40 +13,6 @@ const hashPassword = async (password: string) => {
 
   return hash;
 };
-
-const checkAuthentication = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-
-  res.status(401).json({
-    error: 'Unauthorized',
-  });
-};
-
-const mustBeLoggedOut = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (!req.isAuthenticated()) {
-    return next();
-  }
-
-  res.status(400).json({
-    error: 'Already logged in.',
-  });
-};
-
-AuthRouter.get('/user', checkAuthentication, (req: Request, res: Response) => {
-  res.status(200).json({
-    user: req.user,
-  });
-});
 
 AuthRouter.post('/signUp', async (req, res) => {
   try {

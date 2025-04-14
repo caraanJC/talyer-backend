@@ -10,6 +10,7 @@ import { PORT, SESSION_SECRET } from './src/config/environment';
 import { AppDataSource } from './src/config/AppDataSource';
 import { postgresqlConfig } from './src/config/postgresql';
 import pgSimple from 'connect-pg-simple';
+import profileRouter from './src/routes/profile';
 
 const app = express();
 
@@ -55,6 +56,7 @@ AppDataSource.initialize()
     });
 
     app.use('/auth', authRouter);
+    app.use('/profile', profileRouter);
 
     app.listen(PORT, () => {
       console.log(`App listening on PORT ${PORT}`);
