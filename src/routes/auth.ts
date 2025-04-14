@@ -47,7 +47,7 @@ AuthRouter.get('/user', checkAuthentication, (req: Request, res: Response) => {
   });
 });
 
-AuthRouter.post('/register', async (req, res) => {
+AuthRouter.post('/signUp', async (req, res) => {
   try {
     const body = req.body;
     const email = body.email;
@@ -79,7 +79,7 @@ AuthRouter.post('/register', async (req, res) => {
 
 });
 
-AuthRouter.post('/login', mustBeLoggedOut, passport.authenticate('local'), async (req, res) => {
+AuthRouter.post('/signIn', mustBeLoggedOut, passport.authenticate('local'), async (req, res) => {
   try {
     res.status(200).json({
       message: 'Login success',
@@ -93,7 +93,7 @@ AuthRouter.post('/login', mustBeLoggedOut, passport.authenticate('local'), async
   }
 });
 
-AuthRouter.delete('/logout', checkAuthentication, (req: Request, res: Response) => {
+AuthRouter.delete('/signOut', checkAuthentication, (req: Request, res: Response) => {
   req.logout((err) => {
     if (err) {
       res.status(400).json({
