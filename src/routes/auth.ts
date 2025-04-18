@@ -19,17 +19,21 @@ AuthRouter.post('/signUp', async (req, res) => {
     const body = req.body;
     const email = body.email;
     const password = body.password;
-    const firstName = body.firstName;
-    const lastName = body.lastName;
+    const name = body.name;
 
     const hashedPassword = await hashPassword(password);
 
     const userRepository = AppDataSource.getRepository(User);
 
+    const user = await userRepository.findOneBy({email: email});
+
+    if (user) {
+      throw new Error('Account already exists');
+    }
+
     await userRepository.save({
       email,
-      first_name: firstName,
-      last_name: lastName,
+      name: name,
       password: hashedPassword,
     });
 
@@ -37,7 +41,7 @@ AuthRouter.post('/signUp', async (req, res) => {
       message: 'Registration Successful.',
     });
   } catch (error: any) {
-    console.log(error);
+    // console.log(error);
 
     res.status(400).json({
       error: error.message,

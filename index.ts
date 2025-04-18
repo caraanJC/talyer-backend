@@ -1,5 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
-import dotenv from 'dotenv';
+import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
 import localStrategy from './src/auth/strategies/local';
@@ -11,11 +10,16 @@ import { AppDataSource } from './src/config/AppDataSource';
 import { postgresqlConfig } from './src/config/postgresql';
 import pgSimple from 'connect-pg-simple';
 import profileRouter from './src/routes/profile';
+import cors from 'cors';
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(cors({
+  origin: [ 'http://localhost:8000' ],
+
+}));
 
 AppDataSource.initialize()
   .then(() => {
