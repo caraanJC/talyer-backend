@@ -52,9 +52,7 @@ AuthRouter.post('/signUp', async (req, res) => {
 
 AuthRouter.post('/signIn', mustBeLoggedOut, passport.authenticate('local'), async (req, res) => {
   try {
-    res.status(200).json({
-      message: 'Login success',
-    });
+    res.send(req.sessionID);
   } catch (error: any) {
     console.log(error);
 

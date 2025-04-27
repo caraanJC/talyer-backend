@@ -17,8 +17,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors({
-  origin: [ 'http://localhost:8000' ],
-
+  origin: ['http://localhost:8000'],
+  methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+  allowedHeaders: ["Content-Type", "Access-Control-Allow-Origin"],
+  credentials: true,
 }));
 
 AppDataSource.initialize()
@@ -36,7 +38,12 @@ AppDataSource.initialize()
         secret: SESSION_SECRET,
         resave: false,
         saveUninitialized: true,
-        cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
+        cookie: {
+          maxAge: 30 * 24 * 60 * 60 * 1000,
+          secure: false,
+          httpOnly: false,
+          sameSite: "none"
+        }, // 30 days
       })
     );
 

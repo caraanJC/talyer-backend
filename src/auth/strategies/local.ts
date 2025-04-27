@@ -9,12 +9,16 @@ const localStrategy = new LocalStrategy(
     try {
       const userRepository = AppDataSource.getRepository(User);
 
-      const user = await userRepository.findOneOrFail({
+      const user = await userRepository.findOne({
         where: {
           email: email
         },
-        select: [ 'email', 'first_name', 'id', 'last_name', 'password' ]
+        select: [ 'email', 'name', 'id', 'password' ]
       })
+
+      if (!user) {
+        throw new Error('User not found')
+      }
 
       const result = await bcrypt.compare(password, user.password);
 
@@ -24,9 +28,7 @@ const localStrategy = new LocalStrategy(
 
       return done(null, {
         user_id: user.id,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        name: `${user.first_name} ${user.last_name}`,
+        name: `${user.name}`,
         created_at: Date.now()
       });
 
