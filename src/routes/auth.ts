@@ -25,7 +25,7 @@ AuthRouter.post('/signUp', async (req, res) => {
 
     const userRepository = AppDataSource.getRepository(User);
 
-    const user = await userRepository.findOneBy({email: email});
+    const user = await userRepository.findOneBy({ email: email });
 
     if (user) {
       throw new Error('Account already exists');
@@ -62,16 +62,22 @@ AuthRouter.post('/signIn', mustBeLoggedOut, passport.authenticate('local'), asyn
   }
 });
 
-AuthRouter.delete('/signOut', checkAuthentication, (req: Request, res: Response) => {
+AuthRouter.delete('/signOut', checkAuthentication, (req: Request, res: Response, next: NextFunction) => {
   req.logout((err) => {
     if (err) {
       res.status(400).json({
         error: err?.message || err,
       });
     } else {
-      res.status(204).send();
+      res.clearCookie('connect.sid', {
+        path: '/',
+        secure: false,
+        httpOnly: false
+      }).status(204).send();
+
     }
   });
+
 });
 
 export default AuthRouter;
